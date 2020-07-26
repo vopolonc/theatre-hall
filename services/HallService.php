@@ -7,11 +7,15 @@ use yii\helpers\ArrayHelper;
 
 class HallService
 {
-    final public function decorateHall($data)
-    {
-
-    }
-
+    /**
+     * Retrieves data from From model and populate it to save model and save it
+     *
+     * @param $formModel
+     * @param $row
+     * @param $col
+     * @return bool
+     * @throws \Exception
+     */
     final public function saveHall($formModel, $row, $col)
     {
         $model = new Hall(['scenario' => Hall::SCENARIO_CREATE]);

@@ -3,22 +3,12 @@
 use lo\widgets\modal\ModalAjax;
 use yii\helpers\Url;
 
-$this->title = 'My Yii Application';
+$this->title = 'Theatre hall';
 $style = <<<CSS
 
 .flex-container {
-  /* We first create a flex layout context */
   display: flex;
-  
-  /* Then we define the flow direction 
-     and if we allow the items to wrap 
-   * Remember this is the same as:
-   * flex-direction: row;
-   * flex-wrap: wrap;
-   */
-  flex-flow: nowrap ;
-  
-  /* Then we define how is distributed the remaining space */
+  flex-flow: nowrap;
   justify-content: space-around;
   
   padding: 0;
@@ -48,8 +38,12 @@ $style = <<<CSS
 
 CSS;
 
-$js = <<<JS
-JS;
+
+// Mark seated
+$js = "";
+foreach ($localSeats as $k => $ls) {
+    $js .= new \yii\web\JsExpression("$(\"#btn-\" + {$ls['row']} + \"-\" + {$ls['col']}).removeClass('item-status-empty'); $(\"#btn-\" + {$ls['row']} + \"-\" + {$ls['col']}).addClass('item-status-occupied');");
+}
 $this->registerJs($js);
 
 
@@ -70,27 +64,8 @@ $this->registerCss($style);
                         'id' => 'btn-' . $i . '-' . $j,
                         'class' => 'flex-item item-status-empty'
                     ],
-                    'url' => Url::base() . '/seat/' . $i . '/' . $j, // Ajax view with form to load
-                    'ajaxSubmit' => true, // Submit the contained form as ajax, true by default
-                    // ... any other yii2 bootstrap modal option you need
-                    'events' =>[
-                        ModalAjax::EVENT_MODAL_SUBMIT => new \yii\web\JsExpression("
-                                            function(event, data, status, xhr, selector) {
-                                                console.log(data);
-                                                if (data.success == true && data.action == 'create') {
-                                                    $(\"#btn-\" + data.row + \"-\" + data.col).removeClass('item-status-empty');
-                                                    $(\"#btn-\" + data.row + \"-\" + data.col).addClass('item-status-occupied');
-                                                } else if (data.success == true && data.action == 'delete') {
-                                                    $(\"#btn-\" + data.row + \"-\" + data.col).removeClass('item-status-occupied');
-                                                    $(\"#btn-\" + data . row + \"-\" + data . col).addClass('item-status-empty');
-                                                } else {
-                                                    alert('something goes wrong (500 response)');
-                                                }
-                                                
-                                                $(this).modal('toggle');
-                                             }
-                            "),
-                    ]
+                    'url' => Url::base() . '/seat/' . $i . '/' . $j,
+                    'ajaxSubmit' => true,
                     ]);
                 ?>
 
