@@ -61,3 +61,9 @@ And in the end we must apply the migration
 php yii migrate/up
 ```
 ##Congrats!
+#### [Create form] without data can't pass
+![](th-1.png)
+#### [Create form] with valide data
+![](th-2.png)
+#### [View form] shows occupied seat
+![](th-3.png)
