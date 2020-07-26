@@ -26,8 +26,15 @@ $style = <<<CSS
   list-style: none;
 }
 
-.flex-item {
+.item-status-empty {
   background: tomato;
+}
+
+.item-status-occupied {
+  background: grey;
+}
+
+.flex-item {
   padding: 5px;
   width: 8%;
   height: 40px;
@@ -45,20 +52,22 @@ $this->registerCss($style);
 ?>
 
 <div class="container">
-    <?php for ($i = 0; $i < 10; $i++): ?>
+
+    <?php for ($i = 1; $i < 11; $i++): ?>
         <div class="flex-container">
-            <?php for ($j = 0; $j < 10; $j++): ?>
+            <?php for ($j = 1; $j < 11; $j++): ?>
                 <?php
                     echo ModalAjax::widget([
                     'id' => 'createCompany' . $i . '-' . $j,
-                    'header' => 'Create Company',
+//                    'header' => 'Create Company',
                     'toggleButton' => [
-                    'label' => 'New Company',
-                    'class' => 'flex-item'
+                    'label' => $i .' '. $j,
+                    'class' => 'flex-item item-status-empty'
                     ],
-                    'url' => Url::current(), // Ajax view with form to load
+                    'url' => Url::base() . '/seat/' . $i . '/' . $j, // Ajax view with form to load
                     'ajaxSubmit' => true, // Submit the contained form as ajax, true by default
                     // ... any other yii2 bootstrap modal option you need
+
                     ]);
                ?>
 
