@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\entities\Hall;
 use Yii;
 use yii\base\DynamicModel;
 use yii\filters\AccessControl;
@@ -62,7 +63,10 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $localSeats = Hall::find()->select(['row', 'col'])->asArray()->all();
+        return $this->render('index', [
+                'localSeats' => $localSeats,
+            ]);
     }
 
     /**

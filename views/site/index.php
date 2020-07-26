@@ -48,6 +48,11 @@ $style = <<<CSS
 
 CSS;
 
+$js = <<<JS
+JS;
+$this->registerJs($js);
+
+
 $this->registerCss($style);
 ?>
 
@@ -57,19 +62,37 @@ $this->registerCss($style);
         <div class="flex-container">
             <?php for ($j = 1; $j < 11; $j++): ?>
                 <?php
-                    echo ModalAjax::widget([
-                    'id' => 'createCompany' . $i . '-' . $j,
-//                    'header' => 'Create Company',
+                echo ModalAjax::widget([
+                    'id' => 'seat-' . $i . '-' . $j,
+                    'header' => 'Action with seat (view/create)',
                     'toggleButton' => [
-                    'label' => $i .' '. $j,
-                    'class' => 'flex-item item-status-empty'
+                        'label' => $i . ' ' . $j,
+                        'id' => 'btn-' . $i . '-' . $j,
+                        'class' => 'flex-item item-status-empty'
                     ],
                     'url' => Url::base() . '/seat/' . $i . '/' . $j, // Ajax view with form to load
                     'ajaxSubmit' => true, // Submit the contained form as ajax, true by default
                     // ... any other yii2 bootstrap modal option you need
-
+                    'events' =>[
+                        ModalAjax::EVENT_MODAL_SUBMIT => new \yii\web\JsExpression("
+                                            function(event, data, status, xhr, selector) {
+                                                console.log(data);
+                                                if (data.success == true && data.action == 'create') {
+                                                    $(\"#btn-\" + data.row + \"-\" + data.col).removeClass('item-status-empty');
+                                                    $(\"#btn-\" + data.row + \"-\" + data.col).addClass('item-status-occupied');
+                                                } else if (data.success == true && data.action == 'delete') {
+                                                    $(\"#btn-\" + data.row + \"-\" + data.col).removeClass('item-status-occupied');
+                                                    $(\"#btn-\" + data . row + \"-\" + data . col).addClass('item-status-empty');
+                                                } else {
+                                                    alert('something goes wrong (500 response)');
+                                                }
+                                                
+                                                $(this).modal('toggle');
+                                             }
+                            "),
+                    ]
                     ]);
-               ?>
+                ?>
 
             <?php endfor; ?>
         </div>
